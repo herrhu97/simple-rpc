@@ -47,6 +47,7 @@ public class NettyProviderServer implements SmartApplicationListener, Applicatio
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         // 定义具体的handler处理顺序
+                        socketChannel.pipeline().addLast(new NettyCodec(RpcRequest.class));
                         socketChannel.pipeline().addLast(new NettyProviderHandler(applicationContext));
                     }
                 });
