@@ -35,12 +35,12 @@ public class ProviderServer implements SmartApplicationListener, ApplicationCont
                     byte[] request = new byte[1024];
                     connection.getInputStream().read(request);
                     System.out.println(new String(request));
-
+                    RpcRequest rpcRequest = (RpcRequest) new JsonSerialization().deserialize(request, RpcRequest.class);
                     // call interface
-                    String className = "com.tony.edu.rpc.sms.api.SmsService";
-                    String methodName = "send";
-                    Class[] parameterTypes = new Class[]{String.class,String.class};
-                    Object[] arguments = new Object[]{"10086", "hello"};
+                    String className = rpcRequest.getClassName();
+                    String methodName = rpcRequest.getMethodName();
+                    Class[] parameterTypes = rpcRequest.getParameterTypes();
+                    Object[] arguments = rpcRequest.getArguments();
 
                     Class<?> serviceClass = Class.forName(className);// jdbc
                     // get bean form spring context
