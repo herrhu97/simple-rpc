@@ -1,5 +1,6 @@
 package com.tony.zrpc.provider.server;
 
+import com.tony.zrpc.provider.config.ServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
@@ -33,6 +34,7 @@ public class NettyProviderServer implements SmartApplicationListener, Applicatio
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
         try{
             if(applicationEvent instanceof ContextStartedEvent ) {
+                ServerConfig serverConfig = this.applicationContext.getBean(ServerConfig.class);
                 ServerBootstrap serverBootstrap = new ServerBootstrap();
                 // 1. 类似 tomcat 的配置
                 serverBootstrap
@@ -40,7 +42,7 @@ public class NettyProviderServer implements SmartApplicationListener, Applicatio
                         // 指定 所使用的  NIO
                         .channel(NioServerSocketChannel.class)
                         // 监听 端口
-                        .localAddress(new InetSocketAddress("127.0.0.1", 8080));
+                        .localAddress(new InetSocketAddress(serverConfig.getHost(), serverConfig.getPort()));
                 // 处理器 handler -- 职责链 --- filter
                 // 2. 添加handler - 有了链接之后 处理逻辑
                 serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {

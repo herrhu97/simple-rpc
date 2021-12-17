@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @ComponentScan("com.tony.edu.rpc") // spring注解扫描 basepackage
-@PropertySource("classpath:/dubbo.properties") // spring
+@PropertySource("classpath:/rpc.properties") // spring
 @EnableZrpcProvider // spring scan
 public class SmsApplication {
     public static void main(String[] args) throws Exception {

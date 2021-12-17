@@ -1,6 +1,8 @@
 package com.tony.zrpc.consumer.spring;
 
 import com.tony.zrpc.consumer.annotation.ZRpcReference;
+import com.tony.zrpc.consumer.config.ReferenceConfig;
+import com.tony.zrpc.consumer.config.ZrpcConsumerContext;
 import com.tony.zrpc.consumer.proxy.ProxyFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
@@ -32,22 +34,29 @@ public class ZrpcConsumerPostProcessor implements ApplicationContextAware, Insta
     @Override
     public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
         for (Field field : bean.getClass().getDeclaredFields()) {
-            if (!field.isAnnotationPresent(ZRpcReference.class)) {
-                continue;
-            }
-
-            ZRpcReference zRpcReference = field.getAnnotation(ZRpcReference.class);
-
-            Object proxy = ProxyFactory.getProxy(new Class[]{field.getType()});
-
-            field.setAccessible(true);
             try {
-                field.set(bean, proxy);
-            } catch (IllegalAccessException e) {
+                if (!field.isAnnotationPresent(ZRpcReference.class)) {
+                    continue;
+                }
+
+                ZRpcReference zRpcReference = field.getAnnotation(ZRpcReference.class);
+                ReferenceConfig referenceConfig = new ReferenceConfig();
+                referenceConfig.setService(field.getType());
+
+                // 保存起来
+                ZrpcConsumerContext.saveServiceConfig(referenceConfig);
+
+                // 构建一个代理对象
+                Object referenceBean = ProxyFactory.getProxy(new Class[]{field.getType()});
+
+                // 赋值给bean对应的属性
+                field.setAccessible(true);
+                field.set(bean, referenceBean);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
-        return false;
+        return true;
     }
 }

@@ -47,6 +47,7 @@ public class RedisRegistry implements RegistryService {
     @Override
     public void register(URI uri) {
         String key = "zrpc:" + uri.toString();
+        System.out.println("redis 注册的服务：" + key);
         Jedis jedis = new Jedis(address.getHost(), address.getPort());
         jedis.setex(key, TIME_OUT, String.valueOf(System.currentTimeMillis()));
         jedis.close();

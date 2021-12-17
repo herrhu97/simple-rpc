@@ -3,10 +3,12 @@ package com.tony.zrpc.consumer.proxy;
 
 import com.tony.zrpc.consumer.client.NettyConsumerClient;
 import com.tony.zrpc.consumer.client.RpcConnection;
+import com.tony.zrpc.consumer.discovery.DiscoveryClient;
 import com.tony.zrpc.provider.server.RpcRequest;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.net.URI;
 
 /**
  * 动态代理处理类
@@ -28,10 +30,16 @@ public class RpcInvocationHandler implements InvocationHandler {
         rpcRequest.setParameterTypes(method.getParameterTypes());
         System.out.println("客户端发起的一次动态代理调用" + rpcRequest);
 
-        //网络连接
-        RpcConnection connect = NettyConsumerClient.connect("127.0.0.1", 8080);
-        //发送数据
-        connect.call(rpcRequest);
-        return "模拟的值";
+        // //网络连接
+        // RpcConnection connect = NettyConsumerClient.connect("127.0.0.1", 8080);
+        // //发送数据
+        // connect.call(rpcRequest);
+        // return "模拟的值";
+
+        // 2. 获取和 服务提供者 的 网络链接
+        URI target = DiscoveryClient.chose(rpcRequest.getClassName());
+        RpcConnection connect = NettyConsumerClient.connect(target.getHost(), target.getPort());
+        // 3. 发送数据 -- 基于网络
+        return connect.call(rpcRequest);
     }
 }

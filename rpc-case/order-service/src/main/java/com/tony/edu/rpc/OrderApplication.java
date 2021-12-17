@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @ComponentScan("com.tony.edu.rpc")
-@PropertySource("classpath:/dubbo.properties")
+@PropertySource("classpath:/rpc.properties")
 @EnableZrpcConsumer
 public class OrderApplication {
 
