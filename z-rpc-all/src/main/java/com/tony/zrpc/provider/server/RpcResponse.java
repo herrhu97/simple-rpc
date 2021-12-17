@@ -1,6 +1,7 @@
 package com.tony.zrpc.provider.server;
 
 public class RpcResponse {
+    private String requestId;
     private int status; // 200:ok, 99:exception
     private Object content; //
 
@@ -26,5 +27,13 @@ public class RpcResponse {
                 "status=" + status +
                 ", content=" + content +
                 '}';
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 }

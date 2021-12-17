@@ -36,6 +36,7 @@ public class NettyProviderHandler extends SimpleChannelInboundHandler<RpcRequest
         Object result = method.invoke(serviceBean, arguments);
         // 执行结果 包装成 对下
         RpcResponse response = new RpcResponse();
+        response.setRequestId(rpcRequest.getId());
         response.setStatus(200);
         response.setContent(result);
 

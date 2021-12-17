@@ -39,6 +39,7 @@ public class NettyConsumerClient {
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
                 socketChannel.pipeline().addLast(new NettyCodec(RpcResponse.class));
+                socketChannel.pipeline().addLast(new NettyConsumerHandler());
             }
         });
 

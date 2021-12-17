@@ -19,9 +19,8 @@ public class OrderApplication {
         context.start();
         // 测试..模拟调用接口 -- 一定是远程，因为当前的系统没有具体实现类
         OrderService orderService = context.getBean(OrderService.class);
-        for (int i = 0; i < 10; i ++) {
-            orderService.create("买一瓶水");
-        }
+        orderService.create("买一瓶水");
+        orderService.create("买瓶");
 
         // 阻塞不退出
         System.in.read();
